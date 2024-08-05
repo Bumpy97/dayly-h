@@ -9,8 +9,12 @@
         </div>
         <div class="button-group">
           <button @click="getNewPrediction">Получить еще предсказание</button>
+
         </div>
-        <button class="bback" @click="shareWithFriends">Поделиться</button>
+        <div class="button-group">
+          <button @click="shareWithFriends">Поделиться</button>
+          <button @click="sendToWall">Отправить на стену</button>
+        </div>
       </div>
     </div>
     <LoadingAnimation v-if="showLoading" @loading-complete="updatePrediction" />
@@ -33,6 +37,7 @@ export default {
       randomTitle: '',
       randomContent: '',
       showLoading: false,
+      lastAdTime: 0,
       titles: [
         "Загадочное предсказание",
         "Тайна будущего",
@@ -72,7 +77,7 @@ export default {
         "Незримый след",
         "Светлое будущее",
         "Загадочный поток",
-        "Светиловая гармония",
+        "Световая гармония",
         "Необычная встреча",
         "Звездное послание",
         "Тайные силы",
@@ -157,7 +162,7 @@ export default {
         "Сегодня твои мечты могут стать реальностью.",
         "Впереди множество приятных моментов.",
         "Тебе предстоит важное событие, которое изменит твою жизнь.",
-        "Сегодня отлично подходит для реализации твоих идей.",
+        "Сегодняшний день отлично подходит для реализации твоих идей.",
         "В ближайшие дни твои желания начнут сбываться.",
         "Сегодня тебе стоит обратить внимание на детали.",
         "Скоро появится возможность сделать что-то важное.",
@@ -255,18 +260,41 @@ export default {
       return array[Math.floor(Math.random() * array.length)];
     },
     getNewPrediction() {
-      
+      this.showLoading = true;
+
+      const now = Date.now();
+      if (now - this.lastAdTime < 30000) {
+        //console.log('Wait 30 seconds before showing the ad again');
+        
+        return;
+      }
+
       bridge.send('VKWebAppShowNativeAds', {
         ad_format: 'interstitial' /* Тип рекламы */
       })
         .then((data) => {
           if (data.result) {
-            this.showLoading = true;
+            this.lastAdTime = Date.now(); // Update the last ad time
           } else {
-            this.showLoading = true;
+            console.log('Ad error');
           }
         })
         .catch((error) => { console.log(error); });
+      
+
+    },
+    sendToWall() {
+      bridge.send('VKWebAppShowWallPostBox', {
+        message: 'Мое предсказание на ' + this.currentDate + ': "' + this.randomContent + '"\nПолучи предсказание на сегодня!',
+        attachment: 'https://vk.com/app52059984',
+      })
+        .then((data) => {
+          // Запись отправлена на стену
+          console.log(`Идентификатор записи: ${data.post_id}`);
+        })
+        .catch((e) => {
+          console.log("Ошибка!", e);
+        })
     },
     updatePrediction() {
       this.randomTitle = this.getRandomItem(this.titles);
