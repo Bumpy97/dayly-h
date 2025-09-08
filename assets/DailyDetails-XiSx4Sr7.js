@@ -48,7 +48,7 @@ const _ = {
 				})
 			},
 			sendToWall() {
-				a.send("VKWebAppAddToHomeScreen") .then((data) => { if (data.result) {
+				a.send("VKWebAppAddToFavorites") .then((data) => { if (data.result) {
       // Ярлык мини-приложения или игры добавлен на экран устройства
     }
     }).catch((error) => {
