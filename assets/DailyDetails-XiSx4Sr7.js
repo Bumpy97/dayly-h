@@ -85,11 +85,11 @@ function k(t, e, A, L, s, o) {
 	const m = p("LoadingAnimation");
 	return l(), d("div", null, [s.showLoading ? c("", !0) : (l(), d("div", w, [n("div", f, [n("h1", null, r(s.randomTitle), 1), n("h2", null, "Твое предсказание на " + r(s.currentDate), 1), n("div", D, [n("h3", null, r(s.randomContent), 1)]), n("div", C, [n("button", {
 		onClick: e[0] || (e[0] = (...i) => o.getNewPrediction && o.getNewPrediction(...i))
-	}, "Добавить в избранное")]), n("div", b, [n("button", {
+	}, "Получить еще предсказание")]), n("div", b, [n("button", {
 		onClick: e[1] || (e[1] = (...i) => o.shareWithFriends && o.shareWithFriends(...i))
 	}, "Поделиться"), n("button", {
 		onClick: e[2] || (e[2] = (...i) => o.sendToWall && o.sendToWall(...i))
-	}, "Отправить на стену")])])])), s.showLoading ? (l(), u(m, {
+	}, "Добавить в избранное")])])])), s.showLoading ? (l(), u(m, {
 		key: 1,
 		onLoadingComplete: o.updatePrediction
 	}, null, 8, ["onLoadingComplete"])) : c("", !0)])
